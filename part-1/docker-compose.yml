@@ -1,0 +1,12 @@
+###############
+#   LAUNCH    #
+###############
+# docker-compose up
+
+# Future container name
+simple-nginx:
+   # Image used to create containter
+   image: test-debian
+   # Exposed ports
+   ports:
+      -  80:80

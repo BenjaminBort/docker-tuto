@@ -1,0 +1,51 @@
+###############
+#   LAUNCH    #
+###############
+# docker-compose up
+
+# Future container name
+mysqlServeur:
+   # Image used to create container
+   image: mysql
+   # Environment variable needed by image
+   environment:
+      -  MYSQL_ROOT_PASSWORD=secretPassword
+
+# Future container name
+phpServeur:
+   # Image used to create container
+   image: jprjr/php-fpm
+   # Volumes to use from you computer to the container
+   volumes:
+      -  /home/bort_b/Documents/Docker/nginx:/srv/http:ro
+   # Links between container => here we plug mysqlServeur renamed as mysql in that container
+   links:
+      -  mysqlServeur:mysql
+   # Exposed ports
+   ports:
+      -  9000:9000
+
+# Future container name
+webServeur:
+   # Image used to create containter
+   image: nginx
+   # Links between container => here we plug phpServeur renamed as phpServeur in that container
+   links:
+      -  phpServeur:phpServeur
+   # Volumes to use from you computer to the container
+   volumes:
+      -  /home/bort_b/Documents/Docker/nginx:/usr/share/nginx/html:ro
+      -  /home/bort_b/Documents/Docker/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+   # Exposed ports
+   ports:
+      -  80:80
+
+phpmyadmin:
+   image: corbinu/docker-phpmyadmin
+   environment:
+      -  MYSQL_USERNAME=root
+   # Hint : going on localhost:8080 on this computer will hit the 80's port in the container
+   ports:
+      - 8080:80
+   links:
+      -  mysqlServeur:mysql
